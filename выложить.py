@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -48,7 +49,27 @@ def pages():
     print(f"GitHub Pages настроен для {DOMAIN}")
 
 
+def live():
+    errors = []
+    for scheme in ("https", "http"):
+        url = f"{scheme}://{DOMAIN}/"
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(request, timeout=30) as response:
+                html = response.read().decode("utf-8")
+                assert "RIZO DEL MAR — питомник испанской водяной собаки" in html
+                assert "https://vk.ru/club238840740" in html
+                print(f"Живой сайт проверен: {response.url} · HTTP {response.status}")
+                return
+        except Exception as error:
+            errors.append(f"{url}: {error}")
+    raise RuntimeError("\n".join(errors))
+
+
 def main():
+    if "--проверить-live" in sys.argv:
+        live()
+        return
     check_source()
     if "--проверить" in sys.argv:
         return
