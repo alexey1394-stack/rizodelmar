@@ -1,3 +1,4 @@
+import http.client
 import subprocess
 import sys
 import urllib.request
@@ -7,6 +8,8 @@ ROOT = Path(__file__).resolve().parent
 REPO = "alexey1394-stack/rizodelmar"
 ORIGIN = f"https://github.com/{REPO}.git"
 DOMAIN = "rizodelmar.ru"
+REG_HOST = "u3512251@server286.hosting.reg.ru"
+REG_IP = "31.31.197.28"
 
 
 def run(*args, check=True):
@@ -66,9 +69,57 @@ def live():
     raise RuntimeError("\n".join(errors))
 
 
+def reg_vhost():
+    connection = http.client.HTTPConnection(REG_IP, 80, timeout=30)
+    connection.request("GET", "/", headers={"Host": DOMAIN})
+    response = connection.getresponse()
+    body = response.read().decode("utf-8", errors="ignore")
+    connection.close()
+    found = "RIZO DEL MAR — питомник испанской водяной собаки" in body
+    print(f"REG.RU · HTTP {response.status} · сайт найден: {found}")
+    return found
+
+
+def reg_publish():
+    exclusions = [
+        ".git/", ".gitignore", "предпросмотр.py", "сертификат_сайта.py",
+        "выложить.py", "регру_хостинг.py", "CNAME", ".nojekyll",
+    ]
+    command = ["rsync", "-az", "-e", "ssh -o BatchMode=yes -o ConnectTimeout=20"]
+    for exclusion in exclusions:
+        command.extend(["--exclude", exclusion])
+    command.extend([str(ROOT) + "/", f"{REG_HOST}:www/{DOMAIN}/"])
+    run(*command)
+    print("Файлы залиты на REG.RU")
+    if not reg_vhost():
+        raise RuntimeError("Хостинг ещё не отдаёт сайт под этим доменом")
+
+
+def preview():
+    from functools import partial
+    from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+    handler = partial(SimpleHTTPRequestHandler, directory=str(ROOT))
+    server = ThreadingHTTPServer(("127.0.0.1", 8766), handler)
+    print("Предпросмотр: http://127.0.0.1:8766/", flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
 def main():
+    if "--предпросмотр" in sys.argv:
+        preview()
+        return
     if "--проверить-live" in sys.argv:
         live()
+        return
+    if "--хостинг-проверить" in sys.argv:
+        raise SystemExit(0 if reg_vhost() else 1)
+    if "--хостинг" in sys.argv:
+        reg_publish()
         return
     check_source()
     if "--проверить" in sys.argv:
