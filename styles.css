@@ -102,6 +102,7 @@ img { display: block; max-width: 100%; }
 .dog-results li { padding: 5px 0; color: #d8e0db; font-size: 13px; }
 .dog-results li::before { margin-right: 12px; color: #dca082; content: "—"; }
 .results-note { max-width: 600px; margin: 26px 0 0 auto; color: #9fb4aa; font-size: 10px; line-height: 1.7; }
+.results-note a { border-bottom: 1px solid currentColor; }
 
 .gallery-top { display: grid; grid-template-columns: 1fr 1fr; align-items: end; }
 .gallery-top > p { max-width: 360px; margin: 0 0 6px auto; color: #5c6660; font-size: 13px; line-height: 1.75; }
