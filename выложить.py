@@ -110,6 +110,16 @@ def preview():
 
 
 def main():
+    if "--скачать" in sys.argv:
+        index = sys.argv.index("--скачать")
+        url, filename = sys.argv[index + 1:index + 3]
+        request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": "https://vk.ru/"})
+        with urllib.request.urlopen(request, timeout=60) as response:
+            content = response.read()
+        target = ROOT / "assets" / filename
+        target.write_bytes(content)
+        print(f"Скачано: {target.name} · {len(content)} байт")
+        return
     if "--предпросмотр" in sys.argv:
         preview()
         return
