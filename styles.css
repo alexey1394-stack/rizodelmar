@@ -58,7 +58,7 @@ img { display: block; max-width: 100%; }
 .hero-media { position: relative; min-height: 650px; overflow: hidden; background: #b4b7a4; }
 .hero-media > img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; }
 .hero-media::after { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(12, 31, 28, .42)); content: ""; pointer-events: none; }
-.hero-stamp { position: absolute; z-index: 1; top: 42px; right: 38px; display: flex; align-items: center; flex-direction: column; justify-content: center; width: 126px; height: 126px; border: 1px solid rgba(255, 255, 255, .7); border-radius: 50%; color: white; text-align: center; transform: rotate(9deg); }
+.hero-stamp { position: absolute; z-index: 1; top: auto; right: 38px; bottom: 125px; display: flex; align-items: center; flex-direction: column; justify-content: center; width: 126px; height: 126px; border: 1px solid rgba(255, 255, 255, .7); border-radius: 50%; color: white; text-align: center; transform: rotate(9deg); }
 .hero-stamp span { font-size: 7px; letter-spacing: .14em; }
 .hero-stamp strong { margin-block: 8px; font-family: var(--serif); font-size: 18px; font-weight: 400; }
 .hero-caption { position: absolute; z-index: 1; right: 38px; bottom: 32px; left: 38px; display: flex; align-items: flex-end; justify-content: space-between; color: white; }
@@ -193,7 +193,7 @@ img { display: block; max-width: 100%; }
   .hero-actions { margin-top: 28px; }
   .hero-note { margin-top: 38px; }
   .hero-media { min-height: 520px; }
-  .hero-stamp { top: 25px; right: 24px; width: 104px; height: 104px; }
+  .hero-stamp { top: auto; right: 24px; bottom: 96px; width: 104px; height: 104px; }
   .hero-caption { right: 24px; bottom: 24px; left: 24px; }
   .ticker { padding-inline: 10px; }
   .ticker > div { gap: 20px; }
